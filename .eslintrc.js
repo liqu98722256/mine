@@ -10,11 +10,11 @@ module.exports = {
   },
   rules: {
     '@typescript-eslint/no-var-requires': 0,
-    'indent': [2, 2],
+    '@typescript-eslint/indent': [2, 2],
     'semi': [1, 'always'],
     'eqeqeq': 1,
     'camelcase': 1,
-    "prefer-const": 2,
+    "prefer-const": 0,
     "template-curly-spacing": 1,
     "array-bracket-spacing": [1, "never"]
   }

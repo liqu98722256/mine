@@ -7,5 +7,9 @@
         "typescript",
         "typescriptreact"
     ],
-    "eslint.debug": true,
+    "editor.tabSize": 2,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": false,
+        "source.fixAll.eslint": false
+    }
 }

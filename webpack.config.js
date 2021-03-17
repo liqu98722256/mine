@@ -17,11 +17,14 @@ const config = {
     open: true
   },
   devtool: 'inline-source-map',
+  resolve: {
+    extensions: ['.ts', '.js']
+  },
   module: {
     rules: [
       {
-        test: /\.ts?$/,
-        use: 'ts-loader'
+        test: /\.ts$/,
+        use: ['ts-loader']
       },
       {
         test: /\.css$/,
