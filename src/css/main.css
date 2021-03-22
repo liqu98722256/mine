@@ -1,0 +1,13 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.game-container {
+  margin: 50px auto 0;
+}
+
+.controller > ul {
+  list-style-type: none;
+  display: flex;
+}
