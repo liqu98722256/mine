@@ -74,4 +74,18 @@ describe('创建对象是否符合预期', () => {
       });
     });
   });
+
+  test('测试格子是否重置成功', () => {
+    mine.resetGridMappers();
+    mine.gridMappers.forEach(grid => {
+      expect(grid.bomb).toBeFalsy();
+      expect(grid.open).toBeFalsy();
+      expect(grid.bombCount).toBe(0);
+    });
+  });
+
+  test('测试炸弹是否重置成功', () => {
+    mine.resetBombs();
+    expect(mine.bombSet.size).toBe(0);
+  });
 });

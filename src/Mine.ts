@@ -54,12 +54,10 @@ class Mine {
       grid.bombCount = 0;
       grid.open = false;
     });
-    this.generateGridMapper();
   }
 
   resetBombs(): void {
     this[bombSet].clear();
-    this.generateBombs();
   }
 
   generateBombs(): void {
