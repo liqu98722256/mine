@@ -10,6 +10,7 @@ const template = `
     <div class="controller">
       <ul>
         <li><button id="reset">reset</button></li>
+        <li><button id="show">show</button></li>
       </ul>
     <div/>
     <canvas width="${width}" height="${height}"></canvas>
@@ -29,12 +30,22 @@ const bombCount = 80;
 const canvas = document.querySelector<HTMLCanvasElement>('canvas') as HTMLCanvasElement;
 // 重置按钮
 const reset = document.querySelector('#reset') as HTMLButtonElement;
+// 查看按钮
+const show = document.querySelector('#show') as HTMLButtonElement;
 // 获取渲染上下文
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 // 初始化游戏核心对象
 const mine = new Mine(rowCount, colCount, bombCount);
 const gridWidth = canvas.width / rowCount;
 const gridHeight = canvas.height / colCount;
+// 旗帜集合
+const flagSet = new Set<number>();
+// 将屏幕坐标转换为格子坐标
+const parseCoordinate = (e: MouseEvent): [number, number] => 
+  [Math.floor(e.offsetX / canvas.width * colCount), Math.floor(e.offsetY / canvas.height * rowCount)];
+let showBobm = false;
+let gameOver = false;
+let gameWin = false;
 
 interface DrawGridConfig {
   x: number;
@@ -78,6 +89,7 @@ const draw = () => {
       const grid = mine.getGrid(i, j);
       const x = i * gridWidth;
       const y = j * gridHeight;
+      const flag = flagSet.has(mine.parseDimension(i, j));
       // 判断格子是否被点击过
       if (grid.open) {
         if (grid.bomb) {
@@ -92,6 +104,8 @@ const draw = () => {
             lineWidth,
             textColor
           });
+          gameOver = true;
+          gameWin = false;
         } else {
           drawGrid({
             x,
@@ -102,18 +116,25 @@ const draw = () => {
             strokeStyle,
             text: grid.bombCount > 0 ? grid.bombCount.toString() : '',
             lineWidth,
-            textColor
+            textColor: flag ? 'red' : textColor
           });
         }
       } else {
+        let fillStyle = '#b2bec3';
+        if (!one && showBobm && mine.isBobm(i, j)){
+          fillStyle = '#ff7675';
+        }
+        // 有一个非炸弹格子没打开那么就是没有赢
+        if (!mine.isBobm(i, j)) gameWin = false;
+
         drawGrid({
           x,
           y,
           width,
           height,
-          fillStyle: '#b2bec3',
+          fillStyle,
           strokeStyle,
-          text: '',
+          text: flag ? '⛳' : '',
           lineWidth,
           textColor
         });
@@ -123,10 +144,8 @@ const draw = () => {
 };
 
 const onClick = (e: MouseEvent) => {
-  const { offsetX, offsetY } = e;
   // 转换坐标轴
-  const x = Math.floor(offsetX / canvas.width * colCount);
-  const y = Math.floor(offsetY / canvas.height * rowCount);
+  const [x, y] = parseCoordinate(e);
   // 当第一次点击过后再生成炸弹
   if (one) {
     // 打开当前点击的格子
@@ -143,7 +162,6 @@ const onClick = (e: MouseEvent) => {
         mine.check(i, j);
       }
     }
-    console.log('game over');
   }
 };
 
@@ -152,12 +170,39 @@ const onRest = () => {
   mine.resetGridMappers();
   // 重置所有炸弹
   mine.resetBombs();
+  // 重置旗帜
+  flagSet.clear();
   one = true;
+  showBobm = false;
+  gameOver = false;
+  requestAnimationFrameDraw();
+};
+
+const onFlag = (e: MouseEvent) => {
+  e.preventDefault();
+  // 转换坐标轴
+  const [x, y] = parseCoordinate(e);
+  const oneDimension = mine.parseDimension(x, y);
+  if (flagSet.has(oneDimension)) {
+    flagSet.delete(oneDimension);
+  } else {
+    flagSet.add(oneDimension);
+  }
+};
+
+const onShowBobm = () => {
+  showBobm = !showBobm;
 };
 
 const requestAnimationFrameDraw = () => {
+  if (gameOver) {
+    alert(gameWin ? '你赢了' : '你输了');
+    return;
+  }
   // 渲染画面
+  gameWin = true;
   draw();
+  if (gameWin) gameOver = true;
   requestAnimationFrame(requestAnimationFrameDraw);
 };
 
@@ -165,6 +210,10 @@ const requestAnimationFrameDraw = () => {
 canvas.addEventListener('click', onClick);
 // 监听重置
 reset.addEventListener('click', onRest);
+// 监听查看
+show.addEventListener('click', onShowBobm);
+// 监听旗帜标记
+canvas.addEventListener('contextmenu', onFlag);
 // 生成格子
 mine.generateGridMapper();
 // 运行渲染方法

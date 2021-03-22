@@ -49,13 +49,16 @@ class Mine {
   }
 
   resetGridMappers(): void {
-    // 重新创建一个数组，并重新生成格子
-    this[gridMappers] = [];
+    this[gridMappers].forEach(grid => {
+      grid.bomb = false;
+      grid.bombCount = 0;
+      grid.open = false;
+    });
     this.generateGridMapper();
   }
 
   resetBombs(): void {
-    this[bombSet] = new Set();
+    this[bombSet].clear();
     this.generateBombs();
   }
 
