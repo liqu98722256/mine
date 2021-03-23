@@ -149,10 +149,8 @@ const onClick = (e: MouseEvent) => {
   const [x, y] = parseCoordinate(e);
   // 当第一次点击过后再生成炸弹
   if (one) {
-    // 打开当前点击的格子
-    mine.openGrid(x, y);
-    // 生成炸弹
-    mine.generateBombs();
+    // 生成炸弹，排除掉当前点击区域
+    mine.generateBombs([mine.parseDimension(x, y)]);
     one = false;
   }
   // 检查是否是炸弹

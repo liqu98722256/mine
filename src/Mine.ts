@@ -60,7 +60,9 @@ class Mine {
     this[bombSet].clear();
   }
 
-  generateBombs(): void {
+  generateBombs(): void
+  generateBombs(exclude: number[]): void
+  generateBombs(exclude?: unknown): void {
     // 格子数量为 0，或者炸弹数量大于等于格子数，抛出异常
     if (this.gridMappers.length === 0 || this.bombCount >= this.gridMappers.length)
       throw new Error('炸弹不能大于或等于格子数');
@@ -69,8 +71,10 @@ class Mine {
     // 随机生成炸弹索引
     while(this.bombSet.size < this.bombCount) {
       const idx = Math.floor(Math.random() * len);
-      // 如果格子已经被打开过，那么排除这个格子
-      if (this.getGrid(idx).open) continue;
+      // 格子被排除,那么跳过这个格子
+      if (Array.isArray(exclude)) {
+        if (exclude.includes(idx)) continue;
+      }
       this.bombSet.add(idx);
     }
     // 标记对应格子状态为炸弹
