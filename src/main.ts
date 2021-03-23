@@ -46,6 +46,7 @@ const parseCoordinate = (e: MouseEvent): [number, number] =>
 let showBomb = false;
 let gameOver = false;
 let gameWin = false;
+let running = false;
 
 interface DrawGridConfig {
   x: number;
@@ -165,7 +166,7 @@ const onClick = (e: MouseEvent) => {
   }
 };
 
-const onRest = () => {
+const onReset = () => {
   // 重置所有格子状态
   mine.resetGridMappers();
   // 重置所有炸弹
@@ -175,6 +176,7 @@ const onRest = () => {
   one = true;
   showBomb = false;
   gameOver = false;
+  if (running) return;
   requestAnimationFrameDraw();
 };
 
@@ -195,7 +197,9 @@ const onShowBomb = () => {
 };
 
 const requestAnimationFrameDraw = () => {
+  running = true;
   if (gameOver) {
+    running = false;
     alert(gameWin ? '你赢了' : '你输了');
     return;
   }
@@ -209,7 +213,7 @@ const requestAnimationFrameDraw = () => {
 // 监听点击
 canvas.addEventListener('click', onClick);
 // 监听重置
-reset.addEventListener('click', onRest);
+reset.addEventListener('click', onReset);
 // 监听查看
 show.addEventListener('click', onShowBomb);
 // 监听旗帜标记
