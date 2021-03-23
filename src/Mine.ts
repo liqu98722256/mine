@@ -92,10 +92,10 @@ class Mine {
     return this.gridMappers[idx];
   }
 
-  isBobm(x: number): boolean
-  isBobm(x: [number, number]): boolean
-  isBobm(x: number, y: number): boolean
-  isBobm(x: unknown, y?: unknown): unknown {
+  isBomb(x: number): boolean
+  isBomb(x: [number, number]): boolean
+  isBomb(x: number, y: number): boolean
+  isBomb(x: unknown, y?: unknown): unknown {
     let idx!: number;
     if (typeof x === 'number' && typeof y === 'undefined') {
       idx = x;
@@ -115,7 +115,7 @@ class Mine {
     // 判断格子坐标是否有效
     if (!this.effectiveGrid(x, y)) throw Error('坐标范围无效');
     // 判断是否是炸弹
-    if (this.isBobm(x, y)) {
+    if (this.isBomb(x, y)) {
       // 打开格子
       this.openGrid(x, y);
       return true;

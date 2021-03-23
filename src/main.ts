@@ -43,7 +43,7 @@ const flagSet = new Set<number>();
 // 将屏幕坐标转换为格子坐标
 const parseCoordinate = (e: MouseEvent): [number, number] => 
   [Math.floor(e.offsetX / canvas.width * colCount), Math.floor(e.offsetY / canvas.height * rowCount)];
-let showBobm = false;
+let showBomb = false;
 let gameOver = false;
 let gameWin = false;
 
@@ -121,11 +121,11 @@ const draw = () => {
         }
       } else {
         let fillStyle = '#b2bec3';
-        if (!one && showBobm && mine.isBobm(i, j)){
+        if (!one && showBomb && mine.isBomb(i, j)){
           fillStyle = '#ff7675';
         }
         // 有一个非炸弹格子没打开那么就是没有赢
-        if (!mine.isBobm(i, j)) gameWin = false;
+        if (!mine.isBomb(i, j)) gameWin = false;
 
         drawGrid({
           x,
@@ -173,7 +173,7 @@ const onRest = () => {
   // 重置旗帜
   flagSet.clear();
   one = true;
-  showBobm = false;
+  showBomb = false;
   gameOver = false;
   requestAnimationFrameDraw();
 };
@@ -190,8 +190,8 @@ const onFlag = (e: MouseEvent) => {
   }
 };
 
-const onShowBobm = () => {
-  showBobm = !showBobm;
+const onShowBomb = () => {
+  showBomb = !showBomb;
 };
 
 const requestAnimationFrameDraw = () => {
@@ -211,7 +211,7 @@ canvas.addEventListener('click', onClick);
 // 监听重置
 reset.addEventListener('click', onRest);
 // 监听查看
-show.addEventListener('click', onShowBobm);
+show.addEventListener('click', onShowBomb);
 // 监听旗帜标记
 canvas.addEventListener('contextmenu', onFlag);
 // 生成格子

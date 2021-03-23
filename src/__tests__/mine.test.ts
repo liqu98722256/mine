@@ -59,7 +59,7 @@ describe('创建对象是否符合预期', () => {
     for (let i = 0; i < row; i++) {
       for (let j = 0; j < col; j++) {
         // 跳过炸弹
-        if (mine.isBobm(i, j)) continue;
+        if (mine.isBomb(i, j)) continue;
         mine.check(i, j);
       }
     }
